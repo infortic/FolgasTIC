@@ -1,0 +1,33 @@
+.ui-layout-north {
+    z-index:20 !important;
+    overflow:visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+    overflow:visible !important;
+}
+
+body {
+    background-color: #FFFFFF
+
+}
+
+.ui-widget, .ui-widget .ui-widget {    
+    font-size: 12px !important;
+}
+
+.value {
+    font-weight: bold;
+}
+
+.ui-carousel {
+    margin-bottom: 20px;
+}
+
+.largura{
+    width: 100px;
+    margin: auto;
+    zoom: 200px;
+    tab-size:initial;
+    max-width: 400px;
+}

@@ -1,0 +1,160 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="templates\modeloSistema.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <ui:define name="menu">
+        <ui:include src="resources\includ\menuC.xhtml" />
+    </ui:define>
+    <ui:define name="conteudo" id="boody">
+       
+  
+        
+        
+        
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                <li data-target="#myCarousel" data-slide-to="1"></li>
+                <li data-target="#myCarousel" data-slide-to="2"></li>
+                <li data-target="#myCarousel" data-slide-to="3"></li>
+                <li data-target="#myCarousel" data-slide-to="4"></li>
+                
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="images\banner1.jpg" alt="Los Angeles"></img>
+                </div>
+
+                <div class="item">
+                    <img src="images\banner2.jpg" alt="Los Angeles"></img>
+                </div>
+
+                <div class="item">
+                    <img src="images\banner4.jpg" alt="Los Angeles"></img>
+                </div>
+                <div class="item">
+                    <img src="images\banner5.jpg" alt="Los Angeles"></img>
+                </div>
+
+                <div class="item">
+                    <img src="images\banner3.jpg" alt="Los Angeles"></img>
+                </div>
+            </div>
+
+            <!-- Left and right controls -->
+            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">antes</span>
+            </a>
+            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">depois</span>
+            </a>
+        </div>
+
+
+
+
+
+
+
+        <h:form id="formListaPrinc">
+            <p:dataTable emptyMessage="Nenhum Registro Encontrado" id="tabEventos" 
+                         widgetVar="** Agenda ultimos 30 dias **"
+                         value="#{MBEvento.intes}" 
+                         var="item" 
+                         filteredValue="#{MBEvento.intesFiltrados}"
+                         paginator="true"
+                         rows="5">
+
+                <f:facet name="header">
+                    ** Lista de Colaboradores**
+                </f:facet>
+
+                
+
+                <p:column headerText="Nome: " sortBy="#{item.title}" filterBy="#{item.title}">
+                    <h:outputText value="#{item.title}"/>
+                </p:column>
+
+                <p:column headerText="Dia da Folga: " sortBy="#{item.start_event}" filterBy="#{item.start_event}">
+                    <h:outputText value="#{item.start_event}" id='diadefolga'>
+                    <f:convertDateTime locale="pt-BR" dateStyle="long" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+                <p:column headerText="Dia da inclusão" sortBy="#{item.data_agendamento}" filterBy="#{item.data_agendamento}">
+                    <h:outputText value="#{item.data_agendamento}" id='dataagendamento'>
+                     <f:convertDateTime locale="pt-BR" dateStyle="long" pattern="dd/MM/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
+
+               
+
+                <f:facet name="footer">
+
+
+
+                    <p:commandButton value="Incluir Folga" actionListener="#{MBEvento.prepararNovo()}" 
+                                     oncomplete="PF('dlgCadastroFuncionario').show();" update=":formCadColab:painelCadColab" />
+
+                </f:facet>
+
+            </p:dataTable>
+        </h:form>
+
+        <p:dialog widgetVar="dlgCadastroFuncionario" closable="true"
+                  draggable="false" resizable="false" header="Incluir Folga" modal="true" appendTo="@(body)" style="width:200px; height:80px">
+            <h:form id="formCadColab">
+                
+                <h:panelGrid columns="1" id="painelCadColab"  >
+                    <font size="+0,2" >Escolha um nome:</font>
+                    <p:selectOneMenu id="listagem"   value="#{MBEvento.evento.title}" filter="true" required="true" requiredMessage="Escolha um colaborador" style="width:200px" >
+                        <f:selectItem  itemLabel="colaboradores..." /> 
+                        <f:selectItems var="ites" value="#{MBFuncionario.intes}" itemLabel="#{ites.nome}" itemValue="#{ites.nome}" /> 
+                    </p:selectOneMenu>                   
+                   <font size="+0,2" ><strong>Escolha uma data </strong></font>
+                    <p:inputText type="date" size="30" maxlength="50" value="#{MBEvento.evento.start_event}"  
+                                 required="true" requiredMessage="Escolha um colaborador e uma data para salvar" style="width:200px"/>  
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Gravar" actionListener="#{MBEvento.novoEvento()}"
+                                     oncomplete="PF('dlgCadastroFuncionario').hide();" update=":formListaPrinc:tabEventos :mensagemGlobal"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+        
+        
+        
+        <p:dialog widgetVar="dlgEcluir" closable="true"
+                  draggable="false" resizable="false" header="Exluir Folga?" modal="true" appendTo="@(body)">
+            <h:form id="frmEventExc">
+                <h:panelGrid columns="2" id="PanelGridFormulario">
+                    <h:outputLabel value="Codigo:   " />
+                    <h:outputText value="#{MBEvento.evento.id}" />
+
+                    <h:outputLabel value="Nome: " />
+                    <h:outputText value="#{MBEvento.evento.title}" />
+
+                    <h:outputLabel value="Dia: " />
+                    <h:outputText value="#{MBEvento.evento.start_event}" /><br/><br/>
+                </h:panelGrid>
+                <h:panelGrid columns="2">
+                    <p:commandButton value="Excluir" actionListener="#{MBEvento.exluir()}"
+                                     oncomplete="PF('dlgEcluir').hide();" update=":formListaPrinc:tabEventos :mensagemGlobal"/>
+                    <p:commandButton value="Voltar" icon="ui-icon-arrowreturnthick-1-n"  onclick="PF('dlgEcluir').hide();"  />
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:define>
+</ui:composition>
